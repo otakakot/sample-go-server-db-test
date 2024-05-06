@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"context"
 	"database/sql"
 	"errors"
@@ -11,12 +12,15 @@ import (
 	"syscall"
 	"time"
 
+	// postgres driver.
+	_ "github.com/lib/pq"
+
 	"github.com/otakakot/sample-go-server-db-test/internal/gateway"
 	"github.com/otakakot/sample-go-server-db-test/internal/handler"
 )
 
 func main() {
-	dsn := os.Getenv("DATABASE_URL")
+	dsn := cmp.Or(os.Getenv("DATABASE_URL"), "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -45,14 +49,14 @@ func main() {
 	mux.HandleFunc("DELETE /users/{id}", hdl.DeleteUser)
 
 	srv := &http.Server{
-		Addr:              ":8080",
+		Addr:              ":8888",
 		Handler:           mux,
 		ReadHeaderTimeout: 30 * time.Second,
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 
-	go stop()
+	defer stop()
 
 	go func() {
 		slog.Info("server is running on " + srv.Addr)

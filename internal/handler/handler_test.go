@@ -74,6 +74,7 @@ func Test(t *testing.T) {
 	name := uuid.NewString()
 
 	{
+		t.Log("POST /users")
 		req, err := http.NewRequest(http.MethodPost, srv.URL+"/users", bytes.NewBufferString(`{"name":"`+name+`"}`))
 		if err != nil {
 			t.Fatal(err)
@@ -105,6 +106,7 @@ func Test(t *testing.T) {
 	}
 
 	{
+		t.Log("GET /users/{id}")
 		req, err := http.NewRequest(http.MethodGet, srv.URL+"/users/"+userID, nil)
 		if err != nil {
 			t.Fatal(err)
@@ -142,6 +144,7 @@ func Test(t *testing.T) {
 	}
 
 	{
+		t.Log("PUT /users/{id}")
 		name := uuid.NewString()
 
 		req, err := http.NewRequest(http.MethodPut, srv.URL+"/users/"+userID, bytes.NewBufferString(`{"name":"`+name+`"}`))
@@ -195,6 +198,7 @@ func Test(t *testing.T) {
 	}
 
 	{
+		t.Log("DELETE /users/{id}")
 		req, err := http.NewRequest(http.MethodDelete, srv.URL+"/users/"+userID, nil)
 		if err != nil {
 			t.Fatal(err)

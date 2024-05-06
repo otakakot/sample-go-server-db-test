@@ -57,6 +57,7 @@ func TestGateway(t *testing.T) {
 
 	name1 := uuid.NewString()
 
+	t.Log("create user")
 	created, err := gw.CreateUser(ctx, gateway.CreateUserDAI{
 		Name: name1,
 	})
@@ -66,6 +67,7 @@ func TestGateway(t *testing.T) {
 
 	userID := created.User.ID
 
+	t.Log("read user")
 	read1, err := gw.ReadUser(ctx, gateway.ReadUserDAI{
 		ID: userID,
 	})
@@ -79,6 +81,7 @@ func TestGateway(t *testing.T) {
 
 	name2 := uuid.NewString()
 
+	t.Log("update user")
 	if _, err := gw.UpdateUser(ctx, gateway.UpdateUserDAI{
 		ID:   userID,
 		Name: name2,
@@ -97,6 +100,7 @@ func TestGateway(t *testing.T) {
 		t.Fatalf("name2: %v, read2: %v", name2, read2.User.Name)
 	}
 
+	t.Log("delete user")
 	if _, err := gw.DeleteUser(ctx, gateway.DeleteUserDAI{
 		ID: userID,
 	}); err != nil {
